@@ -1,0 +1,29 @@
+.navBar {
+    font-family:"IrishGrover";
+    background-color:#FFC067;
+    margin:0px;
+    display:flex;
+    align-items:center;
+}
+.mover{
+    margin-left:auto;
+    margin-right:10%;
+}
+.navList{
+    display:flex;
+    list-style:none;
+    gap:2rem;
+    margin:0px;
+    justify-content:center;
+
+    
+}
+
+.navItem{
+    text-align:center;
+}
+
+.logo{
+    margin-left:3rem;
+}
+
