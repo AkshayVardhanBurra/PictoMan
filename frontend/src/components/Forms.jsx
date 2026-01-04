@@ -1,8 +1,9 @@
 
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import styles from "../pages/login.module.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useEffect } from "react";
+import { UserAuthContext } from "../contexts/AuthContext";
 
 //returns true -> strong password or false -> weak password
 function checkPasswordStrength(password){
@@ -82,6 +83,8 @@ export function LoginForm() {
     const data = location.state;
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const authContext = useContext(UserAuthContext)
+    const navigate = useNavigate();
 
     if(Object.hasOwn(data, 'username')){
         console.log(data)
@@ -92,7 +95,30 @@ export function LoginForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
         
-        // Handle login logic here
+        if(username != "" && password.trim() != ""){
+            //call login post request api 
+            fetch("http://localhost:5050/auth/login", {
+            method:'POST',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({username:username, password:password})
+        }).then(pResp => {
+            if(pResp.ok){
+                return pResp.json()
+            }else{
+                setUsername("")
+                setPassword("")
+                alert("Wrong Password or Username!")
+                return null
+            }
+        }).then(jsonResponse => {
+            if(jsonResponse){
+                authContext.setUsername(jsonResponse.username)
+                authContext.setGamesWon(jsonResponse.games_won)
+            }
+        })
+        }
     };
 
     return <>

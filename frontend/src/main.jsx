@@ -7,7 +7,7 @@ import SignUpPage from './pages/SignUp.jsx'
 import {createBrowserRouter, RouterProvider} from "react-router-dom"
 import AuthPage from './pages/AuthPage.jsx'
 import { LoginForm, SignUpForm } from './components/Forms.jsx'
-
+import AuthContext from './contexts/AuthContext.js'
 
 
 const routes = createBrowserRouter([
@@ -27,6 +27,8 @@ const routes = createBrowserRouter([
 ])
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={routes} />
+    <AuthContext.Provider>
+      <RouterProvider router={routes} />
+    </AuthContext.Provider>
   </StrictMode>
 )
