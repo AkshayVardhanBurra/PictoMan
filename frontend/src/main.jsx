@@ -1,19 +1,19 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.jsx'
-import LoginPage from './pages/LogIn.jsx'
-import SignUpPage from './pages/SignUp.jsx'
+import Home from './Home.jsx'
+
 import {createBrowserRouter, RouterProvider} from "react-router-dom"
 import AuthPage from './pages/AuthPage.jsx'
-import { LoginForm, SignUpForm } from './components/Forms.jsx'
-import AuthContext from './contexts/AuthContext.js'
+import { SignUpForm } from './components/Forms.jsx'
+import { LoginForm } from './components/LoginForm.jsx'
+import { UserAuthContext, UserAuthFunction } from './contexts/AuthContext.jsx'
 
 
 const routes = createBrowserRouter([
   {
     path: '/',
-    element: <App />
+    element: <Home />
   },
   {
     path: '/auth',
@@ -27,8 +27,8 @@ const routes = createBrowserRouter([
 ])
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthContext.Provider>
+    <UserAuthFunction>
       <RouterProvider router={routes} />
-    </AuthContext.Provider>
+    </UserAuthFunction>
   </StrictMode>
 )

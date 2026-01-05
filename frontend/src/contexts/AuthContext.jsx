@@ -13,7 +13,7 @@ export function UserAuthFunction({children}){
 
     return <>
 
-        <UserAuthContext.Provider value={{username:username, gamesWon:gamesWon, setUserName:setUserName, setGamesWon: setGamesWon}}>
+        <UserAuthContext.Provider value={{username:username, gamesWon:gamesWon, setUsername:setUserName, setGamesWon: setGamesWon}}>
             {children}
         </UserAuthContext.Provider>
     </>

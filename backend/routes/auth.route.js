@@ -3,7 +3,7 @@ import User from "../models/User.model.js";
 import bcrypt from "bcrypt";
 
 import { generateToken } from "../jwthandler.js";
-
+import {verifyToken} from "./middleware.js"
 const router = express.Router();
 
 router.use(express.json());
@@ -41,9 +41,26 @@ router.post("/login", async (req, res) => {
     }
     console.log(userFound.password)
     if(await bcrypt.compare(password, userFound.password)){
-        return res.status(200).json({success:true, jwt:generateToken(userFound)})
+        console.log("Cookie Sent!")
+        res.cookie("mirror", "mirrorcookie!", {
+            sameSite: "lax",
+            httpOnly:false,
+            secure:false, 
+            
+        })
+        res.cookie("token", generateToken(userFound), {
+            maxAge: 3600000 * 24,
+           //sameSite:'strict'
+           httpOnly:true,
+           secure:false, // change to true later
+
+
+        })
+
+        res.status(200).json({success:true, username:userFound.username, games_won:userFound.games_won})
+        
     }else{
-        return res.status(201).json({success:false, message:"Wrong password or username"})
+        return res.status(400).json({success:false, message:"Wrong password or username"})
     }
 
     }catch(error){
@@ -54,6 +71,11 @@ router.post("/login", async (req, res) => {
     
 })
 
+//Just call this when the user wants to log out.
+//don't forget to clear the context too.
+router.post('/logOut', (req, res) => {
+  res.clearCookie('token').send({ success: true });
+});
 //Working
 router.get("/checkusername", async (req, res) => {
     const usernameFromUser = req.query.username;
@@ -88,6 +110,19 @@ router.get("/checkusername", async (req, res) => {
     }
 
 
+})
+
+
+router.get("/validate", verifyToken, async(req, res) => {
+    try{
+        const user = await User.findById(req.user.id);
+        console.log(user.id);
+        return res.status(200).json(user)
+        
+    }catch(error){
+        console.log(error)
+       return res.status(400).json({success:false, message:"Something went wrong in the server!"})
+    }
 })
 
 export default router;
