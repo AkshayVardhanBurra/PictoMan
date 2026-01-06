@@ -74,7 +74,7 @@ router.post("/login", async (req, res) => {
 //Just call this when the user wants to log out.
 //don't forget to clear the context too.
 router.post('/logOut', (req, res) => {
-  res.clearCookie('token').send({ success: true });
+  res.clearCookie('token').status(200).json({ success: true });
 });
 //Working
 router.get("/checkusername", async (req, res) => {
