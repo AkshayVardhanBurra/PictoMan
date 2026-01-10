@@ -4,6 +4,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import { UserAuthContext } from './contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import styles from "./Home.module.css"
 
 //returns the user
 export async function validateUser(){
@@ -22,6 +23,8 @@ export async function validateUser(){
 }
 
 //it needs the context
+//Use this function in every other page that needs to be protected.
+//Put this in a useEffect.
 export async function redirectToLogin(userAuth, navigate){
   if(userAuth.username == ""){
 
@@ -58,7 +61,17 @@ export function Home() {
   return (
     <>
       <NavigationBar />
-      <h1> Hello {userAuth.username} </h1>
+      <div className={styles.gamesWonSection}>
+        <p>
+          Games Won:
+        </p>
+        <p>
+          {userAuth.gamesWon}
+        </p>
+      </div>
+
+      <button className={styles.buttons}> Play </button>
+      <button className={styles.buttons}> View Leaderboard </button>
     
     </>
   )
