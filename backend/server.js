@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { connectDB } from "./db.js"; //when referring to your own files, always use ".js" at the end.
 import router from "./routes/auth.route.js";
+import {router as userDataRouter} from "./routes/userdata.route.js";
 import jwt from "jsonwebtoken"
 import cookieParser from "cookie-parser";
 const PORT = process.env.PORT || 5050;
@@ -20,7 +21,7 @@ app.use(cors({
 app.use(cookieParser());
 
 app.use("/auth", router);
-
+app.use("/api", userDataRouter);
 
 app.listen(PORT, () => {
     connectDB();

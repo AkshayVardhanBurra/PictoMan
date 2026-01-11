@@ -70,8 +70,13 @@ export function Home() {
         </p>
       </div>
 
-      <button className={styles.buttons}> Play </button>
-      <button className={styles.buttons}> View Leaderboard </button>
+      <button onClick ={ () => {
+        console.log("Going to play the game now!")
+      }} className={styles.buttons}> Play </button>
+      <button onClick = {(e) => {
+        console.log("Navigating to the leaderboard!")
+        navigate("/leaderboard")
+      }} className={styles.buttons}> View Leaderboard </button>
     
     </>
   )
