@@ -15,13 +15,13 @@ router.get("/users", async (req, res) => {
     req.query.slide_number = Number(req.query.slide_number);
     req.query.number_of_records = Number(req.query.number_of_records);
     console.log(req.query)
-    const users = await User.find({}).
+    const users = await User.find({}).sort({games_won:-1}).
     skip(req.query.slide_number * req.query.number_of_records).
     limit(req.query.number_of_records);
 
     console.log(users)
 
-    return res.status(200).json({success:true, users:users});
+    return res.status(200).json({success:true, users:users, empty:users.length == 0});
     
     }catch(error){
         return res.status(400).json({success:false, message:"Something is wrong with the query or URL idk bro."})

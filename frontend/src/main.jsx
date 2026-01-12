@@ -8,6 +8,7 @@ import AuthPage from './pages/AuthPage.jsx'
 import { SignUpForm } from './components/Forms.jsx'
 import { LoginForm } from './components/LoginForm.jsx'
 import { UserAuthContext, UserAuthFunction } from './contexts/AuthContext.jsx'
+import { LeaderboardPage } from './pages/LeaderboardPage.jsx'
 
 
 const routes = createBrowserRouter([
@@ -23,7 +24,11 @@ const routes = createBrowserRouter([
       { path: "login", element: <LoginForm /> },
       { path: "createaccount", element: <SignUpForm /> }
     ]
-  }
+  },
+  {
+    path: '/leaderboard',
+    element: <LeaderboardPage />
+  },
 ])
 createRoot(document.getElementById('root')).render(
   <StrictMode>
