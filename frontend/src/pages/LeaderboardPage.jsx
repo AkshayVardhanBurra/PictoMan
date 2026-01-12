@@ -2,14 +2,15 @@ import {useState, useEffect, useContext} from "react"
 import {useNavigate} from "react-router-dom"
 import NavigationBar from "../components/NavigationBar";
 import API_URL from "../api_url";
+import styles from "./LeaderboardPage.module.css";
 
 const MAX_LEADERBOARD_USERS = 200;
 const MAX_RECORDS_PER_PAGE = 2;
 
 export function LeaderboardCard({user}){
-    return <>
-    <p> {user.username}: {user.games_won}</p>
-    </>
+    return <div className={styles.card}>
+        <p className={styles.userInfo}>{user.username}: {user.games_won}</p>
+    </div>
 }
 
 export async function getUsers(currWindow, number_of_records){
@@ -22,7 +23,7 @@ export async function getUsers(currWindow, number_of_records){
     }
 }
 
-export function LeaderboardPage(){
+export function LeaderboardPage() {
 
     const [loading, setLoading] = useState(true);
 
@@ -55,6 +56,8 @@ export function LeaderboardPage(){
                 setNextUsers({empty:true});
             }else{
                 getUsers(currWindow + 1, MAX_RECORDS_PER_PAGE).then(users=>{
+                    console.log("NEXT USERS")
+                    console.log(nextUsers);
                     setNextUsers(users);
                 })
             }
@@ -67,7 +70,7 @@ export function LeaderboardPage(){
             });
             getUsers(currWindow + 1, MAX_RECORDS_PER_PAGE).then(users=>{
                 console.log("NEXT USERS")
-                console.log(users);
+                console.log(nextUsers);
                 setNextUsers(users);
             })
 
@@ -79,22 +82,22 @@ export function LeaderboardPage(){
 
 
     return <>
-    <NavigationBar />
-
-    <div>
-        {!loading && currentUsers.users.map(user => {
-            return <LeaderboardCard key= {user._id} user={user} />
-        })}
-    </div>
-
-    {currWindow != 0 && <button onClick={(e) => {
-        setDirection(false);
-        setCurrWindow(currWindow - 1);
-    }}> Previous </button>}
-    {!nextUsers.empty && <button onClick = {(e) => {
-        setDirection(true);
-        setCurrWindow(currWindow + 1);
-    }}> Next </button>}
+        <NavigationBar />
+        <div className={styles.leaderboardContainer}>
+            {!loading && currentUsers.users.map(user => {
+                return <LeaderboardCard key={user._id} user={user} />
+            })}
+        </div>
+        <div className={styles.buttonContainer}>
+            {currWindow != 0 && <button className={styles.button} onClick={(e) => {
+                setDirection(false);
+                setCurrWindow(currWindow - 1);
+            }}> Previous </button>}
+            {!nextUsers.empty && <button className={styles.button} onClick={(e) => {
+                setDirection(true);
+                setCurrWindow(currWindow + 1);
+            }}> Next </button>}
+        </div>
     </>
-
 }
+
