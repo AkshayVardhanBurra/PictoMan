@@ -32,3 +32,22 @@ router.get("/users", async (req, res) => {
     }
 });
 
+//This will be continuously called by the SearchBar component.
+router.get("/searchUsers", async (req, res) => {
+    try{
+        console.log("Here!")
+        const exactUser = await User.find({username:req.query.startsWith})
+        console.log(exactUser);
+        const users = await User.find({username:{$regex: req.query.startsWith}}).limit(req.query.limit);
+        if(exactUser.length > 0){
+            return res.status(200).json({searchResults: users, exactUser:exactUser})
+        }else{
+            return res.status(200).json({searchResults: users, exactUser:null})
+        }
+        
+    }catch(error){
+        console.log(error);
+        return res.status(400).json({success:false, message:"Something went wrong in the server!"});
+    }
+})
+

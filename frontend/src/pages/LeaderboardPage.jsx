@@ -3,9 +3,11 @@ import {useNavigate} from "react-router-dom"
 import NavigationBar from "../components/NavigationBar";
 import API_URL from "../api_url";
 import styles from "./LeaderboardPage.module.css";
+import UserSearchBar from "../components/UserSearchBar";
 
 const MAX_LEADERBOARD_USERS = 200;
 const MAX_RECORDS_PER_PAGE = 2;
+
 
 export function LeaderboardCard({user}){
     return <div className={styles.card}>
@@ -83,6 +85,9 @@ export function LeaderboardPage() {
 
     return <>
         <NavigationBar />
+
+        <UserSearchBar />
+        
         <div className={styles.leaderboardContainer}>
             {!loading && currentUsers.users.map(user => {
                 return <LeaderboardCard key={user._id} user={user} />
