@@ -51,3 +51,13 @@ router.get("/searchUsers", async (req, res) => {
     }
 })
 
+router.get("/getIndividualUser/:username", async (req, res)=>{
+    try{
+        const user = await User.find({username:req.params.username});
+        
+        return res.status(200).json(user);
+    }catch(error){
+        return res.status(400).json({success:false, message:"Something went wrong in the server!"});
+    }
+})
+

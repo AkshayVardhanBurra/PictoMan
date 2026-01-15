@@ -23,6 +23,7 @@ const routes = createBrowserRouter([
       { index: true, element: <LoginForm /> },
       { path: "login", element: <LoginForm /> },
       { path: "createaccount", element: <SignUpForm /> }
+      { path: "/user/:username"}, element:
     ]
   },
   {
