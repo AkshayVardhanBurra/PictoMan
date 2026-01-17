@@ -9,6 +9,7 @@ import { SignUpForm } from './components/Forms.jsx'
 import { LoginForm } from './components/LoginForm.jsx'
 import { UserAuthContext, UserAuthFunction } from './contexts/AuthContext.jsx'
 import { LeaderboardPage } from './pages/LeaderboardPage.jsx'
+import UserPage from './pages/UserPage.jsx'
 
 
 const routes = createBrowserRouter([
@@ -22,9 +23,13 @@ const routes = createBrowserRouter([
     children: [
       { index: true, element: <LoginForm /> },
       { path: "login", element: <LoginForm /> },
-      { path: "createaccount", element: <SignUpForm /> }
-      { path: "/user/:username"}, element:
+      { path: "createaccount", element: <SignUpForm /> },
+     
     ]
+  },
+  {
+    path: "/users/:username",
+    element: <UserPage />
   },
   {
     path: '/leaderboard',

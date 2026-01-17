@@ -2,17 +2,14 @@ import {useState, useEffect} from "react";
 import { useParams } from "react-router-dom";
 import styles from "./UserPage.module.css";
 import API_URL from "../api_url";
-
-
-
-
+import NavigationBar from "../components/NavigationBar";
 
 
 function UserPage(){
 
     const {username} = useParams();
-    const {userData, setUserData} = useState(null);
-    const {isLoading, setIsLoading} = useState(true);
+    const [userData, setUserData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
 
         setIsLoading(true);
@@ -23,6 +20,8 @@ function UserPage(){
                 setUserData(null);
             }else{
                 setUserData(j[0]);
+                console.log("The user data: ")
+                console.log(j)
                 setIsLoading(false);
             }
         })
@@ -30,7 +29,7 @@ function UserPage(){
 
         
         
-    })
+    }, [])
 
 
     if(isLoading){
@@ -45,12 +44,13 @@ function UserPage(){
     }else{
     return <>
         <NavigationBar />
+        <h1> {userData.username}</h1>
         <div className={styles.gamesWonSection}>
             <p>
             Games Won:
             </p>
             <p>
-            {userData.gamesWon}
+            {userData.games_won}
             </p>
         </div>
       </>
@@ -58,6 +58,7 @@ function UserPage(){
 }
 
 
+export default UserPage;
 //Get the user when component first loads for first time. //get username from dynamic url.
 
 // Display name and games won
