@@ -8,12 +8,13 @@ export function UserAuthFunction({children}){
    
     const [username, setUserName] = useState("");
     const [gamesWon, setGamesWon] = useState(0);
+    const [_id, setId] = useState("");
 
 
 
     return <>
 
-        <UserAuthContext.Provider value={{username:username, gamesWon:gamesWon, setUsername:setUserName, setGamesWon: setGamesWon}}>
+        <UserAuthContext.Provider value={{_id: _id, username:username, gamesWon:gamesWon, setUsername:setUserName, setGamesWon: setGamesWon, setId:setId}}>
             {children}
         </UserAuthContext.Provider>
     </>

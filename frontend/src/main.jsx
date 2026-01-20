@@ -10,6 +10,7 @@ import { LoginForm } from './components/LoginForm.jsx'
 import { UserAuthContext, UserAuthFunction } from './contexts/AuthContext.jsx'
 import { LeaderboardPage } from './pages/LeaderboardPage.jsx'
 import UserPage from './pages/UserPage.jsx'
+import GamePage from './pages/GamePage.jsx'
 
 
 const routes = createBrowserRouter([
@@ -35,11 +36,18 @@ const routes = createBrowserRouter([
     path: '/leaderboard',
     element: <LeaderboardPage />
   },
+  {
+    path:'/game',
+    element:<GamePage />
+  }
+
+
+
 ])
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+ 
     <UserAuthFunction>
       <RouterProvider router={routes} />
     </UserAuthFunction>
-  </StrictMode>
+
 )

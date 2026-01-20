@@ -39,6 +39,7 @@ export async function redirectToLogin(userAuth, navigate){
       if(userExists){
         userAuth.setUsername(userExists.username);
         userAuth.setGamesWon(userExists.games_won);
+        userAuth.setId(userExists._id);
       }else{
         navigate("/auth/login");
       }
