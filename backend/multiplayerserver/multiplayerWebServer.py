@@ -13,7 +13,9 @@ matchMadeData = dict()
 
 async def handler(websocket):
     async for message in websocket:
-        print(message)
+        if message["command"] == "REGISTER":
+            # Add the player to the queue using their _id.
+            clientIdQueue.append(message["data"]["_id"])
 
 
 async def main():

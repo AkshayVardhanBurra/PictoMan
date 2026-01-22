@@ -64,6 +64,7 @@ async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameS
     setSocket(socket);
 }
 
+//returns a format where it maps letter to color.
 function colorifyPictWord(pict_word){
 
     const colorified = {};
