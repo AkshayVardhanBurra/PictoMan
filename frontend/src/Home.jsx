@@ -26,6 +26,7 @@ export async function validateUser(){
 //Use this function in every other page that needs to be protected.
 //Put this in a useEffect.
 export async function redirectToLogin(userAuth, navigate){
+  console.log(userAuth.username == "");
   if(userAuth.username == ""){
 
       console.log("Entered HERE!")
@@ -43,7 +44,10 @@ export async function redirectToLogin(userAuth, navigate){
       }else{
         navigate("/auth/login");
       }
+    }else{
+      
     }
+    
 }
 
 export function Home() {
@@ -73,6 +77,7 @@ export function Home() {
 
       <button onClick ={ () => {
         console.log("Going to play the game now!")
+        navigate("/game");
       }} className={styles.buttons}> Play </button>
       <button onClick = {(e) => {
         console.log("Navigating to the leaderboard!")
