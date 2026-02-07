@@ -56,8 +56,8 @@ router.post("/login", async (req, res) => {
 
 
         })
-
-        res.status(200).json({success:true, username:userFound.username, games_won:userFound.games_won})
+        console.log(JSON.stringify(userFound));
+        res.status(200).json({success:true, _id:userFound._id, username:userFound.username, games_won:userFound.games_won})
         
     }else{
         return res.status(400).json({success:false, message:"Wrong password or username"})

@@ -26,7 +26,7 @@ export async function validateUser(){
 //Use this function in every other page that needs to be protected.
 //Put this in a useEffect.
 export async function redirectToLogin(userAuth, navigate){
-  console.log(userAuth.username == "");
+  console.log(userAuth);
   if(userAuth.username == ""){
 
       console.log("Entered HERE!")

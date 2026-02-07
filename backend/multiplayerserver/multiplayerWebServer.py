@@ -1,6 +1,7 @@
 import asyncio
 from websockets.asyncio.server import serve
 import json
+import uuid
 
 MATCH_DELIMETER = ":"
 
@@ -17,15 +18,12 @@ async def matchmaker():
         player1 = await match_queue.get()
         player2 = await match_queue.get()
 
-        print("MATCH MADE:", player1, player2)
+        room_id = str(uuid.uuid4())
 
-        matchKey = (
-            player1 + MATCH_DELIMETER + player2
-            if player1 < player2
-            else player2 + MATCH_DELIMETER + player1
-        )
+        print(f"MATCH MADE in room: {room_id} player1:{player1} player2:{player2}")
 
-        matchMadeData[matchKey] = {
+
+        matchMadeData[room_id] = {
             player1: None,
             player2: None
         }
@@ -33,24 +31,23 @@ async def matchmaker():
         print(matchMadeData)
 
         await clients[player1].send(json.dumps({
-            "command": "OTHER_PLAYER",
-            "data": {"other_id": player2}
+            "command": "OTHER_PLAYER PICT_WORD ROOM_ID",
+            "data": {
+                "other_id": player2,
+                "pict_word": "EXAMPLE",
+                "room_id":room_id
+                }
         }))
 
         await clients[player2].send(json.dumps({
-            "command": "OTHER_PLAYER",
-            "data": {"other_id": player1}
+            "command": "OTHER_PLAYER PICT_WORD ROOM_ID",
+            "data": {
+                "other_id": player1,
+                "pict_word": "EXAMPLE",
+                "room_id":room_id
+                }
         }))
 
-        await clients[player1].send(json.dumps({
-            "command": "PICT_WORD",
-            "data": {"pict_word": "EXAMPLE"}
-        }))
-
-        await clients[player2].send(json.dumps({
-            "command": "PICT_WORD",
-            "data": {"pict_word": "EXAMPLE"}
-        }))
 
 
 async def handler(websocket):

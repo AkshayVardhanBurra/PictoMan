@@ -42,8 +42,10 @@ export function LoginForm() {
             }
         }).then(jsonResponse => {
             if(jsonResponse){
+                console.log(jsonResponse);
                 authContext.setUsername(jsonResponse.username)
                 authContext.setGamesWon(jsonResponse.games_won)
+                authContext.setId(jsonResponse._id);
                 navigate("/")
             }
         })

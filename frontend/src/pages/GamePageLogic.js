@@ -2,7 +2,7 @@ import { redirectToLogin } from "../Home";
 
 
 
-export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted){
+export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap){
     
     //Successfully logged in or redirected out. Set up connection to server.
     
@@ -12,10 +12,6 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
     const pictWord = "";
 
     socket.onopen = (event) => {
-        console.log("Websocket got connected: ");
-        console.log(event)
-        console.log("SENDING:")
-        console.log(userAuth.username);
         
         sendMessage(socket, JSON.stringify({command:"REGISTER", data: {
             _id:userAuth._id
@@ -28,28 +24,33 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
             opponent_id = msg.data.other_id;
         }else if(msg.data.command == "PICT_WORD"){
             pictWord = msg.data.pict_word;
-            setWord(colorifyPictWord(pictWord))
+            setWord(pictWord);
+            setColorMap(colorifyPictWord(pictWord));
         }
     }
-    console.log("REACHED HERE!!!!!!!!")
+
+    //COMMENT OUT LATER
+    setWord("EXAMPLE")
+    setColorMap(colorifyPictWord("EXAMPLE"));
+
     setSocket(socket);
 }
 
 
+//Returns a string of w's that are the same length as pict_word
 function colorifyPictWord(pict_word){
+    let result = "";
 
-    const colorified = {};
-
-    for(const char of pict_word){
-        colorified[char] = "white";
+    for(let i = 0; i < pict_word.length; i++){
+        result += "w";
     }
-
-    return colorified;
+    return result;
+    
 }
 
 
 function sendMessage(socket, message) {
     
-        socket.send(message);
+    socket.send(message);
     
 }
