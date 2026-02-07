@@ -51,14 +51,11 @@ function GamePage(){
         redirectToLogin(userAuth, navigate);
     }, [])
     useEffect(() => {
-        console.log("HERE WITH USER ID1 " + userAuth._id);
 
         if(userAuth._id != ""){
-            console.log("HERE WITH USER ID " + userAuth._id);
             setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap);
-            console.log("FROM EFFECT: " + userAuth.username)
         }else{
-            console.log("No id, was blank")
+
             redirectToLogin(userAuth, navigate);
         }
     }, [userAuth._id])

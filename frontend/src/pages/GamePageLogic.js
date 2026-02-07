@@ -8,8 +8,9 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
     
     const socket = new WebSocket("ws://localhost:8080/"); //get port number from .env later.
     
-    const opponent_id = "";
-    const pictWord = "";
+    let opponent_id = "";
+    let pictWord = "";
+    let room_id = "";
 
     socket.onopen = (event) => {
         
@@ -20,12 +21,19 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
     }
     //Recieving messages from central server.
     socket.onmessage = (msg) => {
-        if(msg.data.command == "OTHER_PLAYER"){
-            opponent_id = msg.data.other_id;
-        }else if(msg.data.command == "PICT_WORD"){
-            pictWord = msg.data.pict_word;
+        console.log("entered the onmessage")
+        console.log(msg.data)
+        let parsed = JSON.parse(msg.data)
+        if(parsed.command.includes("OTHER_PLAYER")){
+            opponent_id = parsed.data.other_id;
+        }
+        if(parsed.command.includes("PICT_WORD")){
+            pictWord = parsed.data.pict_word;
             setWord(pictWord);
             setColorMap(colorifyPictWord(pictWord));
+        }
+        if(parsed.JSONcommand.includes("ROOM_ID")){
+            room_id = parsed.data.room_id;
         }
     }
 

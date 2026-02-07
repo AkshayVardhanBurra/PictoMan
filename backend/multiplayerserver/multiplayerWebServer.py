@@ -34,7 +34,7 @@ async def matchmaker():
             "command": "OTHER_PLAYER PICT_WORD ROOM_ID",
             "data": {
                 "other_id": player2,
-                "pict_word": "EXAMPLE",
+                "pict_word": "doodoo",
                 "room_id":room_id
                 }
         }))
@@ -43,7 +43,7 @@ async def matchmaker():
             "command": "OTHER_PLAYER PICT_WORD ROOM_ID",
             "data": {
                 "other_id": player1,
-                "pict_word": "EXAMPLE",
+                "pict_word": "doodoo",
                 "room_id":room_id
                 }
         }))
