@@ -6,24 +6,24 @@ import { redirectToLogin } from "../Home";
 import { setUpMultiplayer } from './GamePageLogic';
 
 
-function PictWordDisplay({pict_word}){
+function PictWordDisplay({pict_word, colorMap}){
 
     const helper = (pict_word) => {
         const tags = [];
 
-        let currLetter;
+        
         for(let i = 0; i < pict_word.length; i++){
-            if(i % 2 == 0){
-                currLetter = pict_word[i];
-            }else{
-                if(pict_word[i] == 'w'){
-                    tags.push(<span key={i} style={{color:"white"}}> {currLetter} </span>)
+
+
+            
+                if(colorMap[i] == 'w'){
+                    tags.push(<span key={i} style={{color:"white"}}> {pict_word[i]} </span>)
                 }else{
                    
-                    tags.push(<span key={i} style={{color:"red"}}> {currLetter} </span>)
+                    tags.push(<span key={i} style={{color:"red"}}> {pict_word[i]} </span>)
                 
                 }
-            }
+            
         }
 
         return tags;
@@ -72,7 +72,7 @@ function GamePage(){
         console.log(word);
         return <>
             <NavigationBar />
-            <PictWordDisplay pict_word={word} />
+            <PictWordDisplay pict_word={word} colorMap={colorMap} />
         </>
     }
 }
