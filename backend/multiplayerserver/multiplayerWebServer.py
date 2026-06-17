@@ -28,13 +28,15 @@ async def matchmaker():
             player2: None
         }
 
-        print(matchMadeData)
+        player1Word = "example1"
+        player2Word = "example2"
 
         await clients[player1].send(json.dumps({
             "command": "OTHER_PLAYER PICT_WORD ROOM_ID",
             "data": {
                 "other_id": player2,
-                "pict_word": "doodoo",
+                "pict_word": player1Word,#goes with permission PICT_WORD
+                "opponent_word":player2Word,#goes with permission PICT_WORD
                 "room_id":room_id
                 }
         }))
@@ -43,7 +45,8 @@ async def matchmaker():
             "command": "OTHER_PLAYER PICT_WORD ROOM_ID",
             "data": {
                 "other_id": player1,
-                "pict_word": "doodoo",
+                "pict_word": player2Word,#goes with permission PICT_WORD
+                "opponent_word": player1Word,#goes with permission PICT_WORD
                 "room_id":room_id
                 }
         }))

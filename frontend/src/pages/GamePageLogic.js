@@ -2,10 +2,8 @@ import { redirectToLogin } from "../Home";
 
 
 
-export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap){
-    
+export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord){
     //Successfully logged in or redirected out. Set up connection to server.
-    
     const socket = new WebSocket("ws://localhost:8080/"); //get port number from .env later.
     
     let opponent_id = "";
@@ -17,8 +15,9 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
         sendMessage(socket, JSON.stringify({command:"REGISTER", data: {
             _id:userAuth._id
         }}))
-        setGameStarted(true)
     }
+
+
     //Recieving messages from central server.
     socket.onmessage = (msg) => {
         console.log("entered the onmessage")
@@ -30,16 +29,17 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
         if(parsed.command.includes("PICT_WORD")){
             pictWord = parsed.data.pict_word;
             setWord(pictWord);
+            console.log("FROM SERVER: " + parsed.data.opponent_word);
+            setOpponentWord(parsed.data.opponent_word);
             setColorMap(colorifyPictWord(pictWord));
+            setGameStarted(true);
         }
-        if(parsed.JSONcommand.includes("ROOM_ID")){
+        if(parsed.command.includes("ROOM_ID")){
             room_id = parsed.data.room_id;
         }
+
     }
 
-    //COMMENT OUT LATER
-    setWord("EXAMPLE")
-    setColorMap(colorifyPictWord("EXAMPLE"));
 
     setSocket(socket);
 }
@@ -57,7 +57,7 @@ function colorifyPictWord(pict_word){
 }
 
 
-function sendMessage(socket, message) {
+export function sendMessage(socket, message) {
     
     socket.send(message);
     
