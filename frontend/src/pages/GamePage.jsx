@@ -3,8 +3,8 @@ import { UserAuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import NavigationBar from "../components/NavigationBar";
 import { redirectToLogin } from "../Home";
-import { sendMessage, setUpMultiplayer } from './GamePageLogic';
-
+import { opponent_id, room_id, sendMessage, setUpMultiplayer } from './GamePageLogic';
+import {generate} from 'random-words'
 
 const MAX_QUEUE_MESSAGES = 4;
 
@@ -39,21 +39,7 @@ function PictWordDisplay({pict_word, colorMap}){
     </>
 }
 
-function GuessQueue({guessQueue}){
 
-    return <>
-        
-        <div>
-            {
-                guessQueue.map((guess) => {
-                    return <p key={guess.id}> Opponent guessed {guess.letter} </p>
-                })
-            }
-        </div>
-    
-    </>
-
-}
 
 function OpponentPictWord({opponentWord, opponentGuesses}){
 
@@ -80,25 +66,71 @@ function OpponentPictWord({opponentWord, opponentGuesses}){
     </>
 }
 
-function guessWord(socket, phrase, guessQueue, setGuessQueue, opponentWord){
+export const MAX_GUESSES = 6;
+export let currentGuesses = 0;
+
+export function resetGuesses(){
+    currentGuesses = 0;
+}
+
+function guessWord(socket, phrase, guessQueue, setGuessQueue, opponentWord, setOpponentWord){
     if(socket == null || socket == undefined){
         return;
     }
 
-    //TODO send reset message once word is guessed
     //TODO make sure to handle number of guesses
-    //TODO make sure to make it visible to opponent about the guesses
-    const addedGuessQueue = [];
+    //TODO send reset message once word is guessed
+    const addedGuessQueue = new Set([]);
     for (const guess of phrase){
-        if(opponentWord.includes(guess) && !guessQueue.includes(guess)){
-            addedGuessQueue.push(guess);
+        if(opponentWord.includes(guess)){
+            addedGuessQueue.add(guess);
         }else{
             //number of guesses goes up
+            currentGuesses += 1;
+            if(currentGuesses >= MAX_GUESSES){
+                const message = {
+                    command: "RESET_OPPONENT_WORD", 
+                    data: {
+                        room_id: room_id,
+                        opponent_id: opponent_id,
+                        pict_word: generate()
+                    }
+                }
+                setOpponentWord(message.data.pict_word);
+                sendMessage(socket, JSON.stringify(message));
+                setGuessQueue([]);
+                resetGuesses();
+            }
             return;
         }
     }
+    
+    let theGuessQueue = [...new Set([...guessQueue, ...addedGuessQueue])]
+    setGuessQueue(theGuessQueue);
 
-    setGuessQueue([...guessQueue, ...addedGuessQueue]);
+    let counter = 0;
+    for(let i = 0; i < theGuessQueue.length; i++){
+        if(opponentWord.includes(theGuessQueue[i])){
+            counter+=1;
+        }
+    }
+
+    console.log(theGuessQueue)
+    let uniqueOppStr = [...new Set(opponentWord)].join("");
+    if(counter == uniqueOppStr.length){
+        let opWord = generate();
+        sendMessage(socket, JSON.stringify({
+            command: "RESET_BOARD",
+            data:{
+                room_id:room_id,
+                opponent_id:opponent_id,
+                pict_word:opWord
+            }
+
+        }))
+        setOpponentWord(opWord)
+        setGuessQueue([]);
+    }
 }
 
 function GamePage(){
@@ -114,8 +146,7 @@ function GamePage(){
     const [gameStarted, setGameStarted] = useState(false);
     const [pictWordInput, setPictWordInput] = useState("");
 
-    //max amount of items determined my MAX_QUEUE_MESSAGES
-    const [guessQueue, setGuessQueue] = useState([{id:1, letter:"A"}, {id:2, letter:"B"}, {id:3, letter:"C"}, {id:4, letter:"D"}]);
+
 
     useEffect(() => {
         redirectToLogin(userAuth, navigate);
@@ -139,14 +170,13 @@ function GamePage(){
         console.log(word);
         return <>
             <NavigationBar />
-            <GuessQueue guessQueue={guessQueue} />
             <PictWordDisplay pict_word={word} colorMap={colorMap} />
             <OpponentPictWord opponentWord={opponentWord} opponentGuesses={opponentGuesses} />
             <input type="text" onChange={(e) => {
                 setPictWordInput(e.target.value);
             }} value={pictWordInput}/>
             <button onClick={() => {
-                guessWord(socket,  pictWordInput, opponentGuesses, setOpponentGuesses, opponentWord)
+                guessWord(socket,  pictWordInput.toLowerCase(), opponentGuesses, setOpponentGuesses, opponentWord.toLowerCase(), setOpponentWord)
             }}> Enter </button>
         </>
     }

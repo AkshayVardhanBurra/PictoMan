@@ -62,12 +62,33 @@ async def handler(websocket):
 
             print("REGISTER:", player_id)
 
-            if player_id in clients.keys():
-                continue
+            
 
             clients[player_id] = websocket
             await match_queue.put(player_id)
             print(match_queue)
+        if message["command"] == "RESET_OPPONENT_WORD":
+            
+            opponent_websocket = clients[message["data"]["opponent_id"]]
+            reset_pict_word = message["data"]["pict_word"]
+            opponent_message = {
+                "command":"RESET_PICTWORD",
+                "data": {
+                    "pict_word": reset_pict_word
+                }
+            }
+            await opponent_websocket.send(json.dumps(opponent_message))
+        
+        if message["command"] == "RESET_BOARD":
+            opponent_websocket = clients[message["data"]["opponent_id"]]
+            reset_pict_word = message["data"]["pict_word"]
+            opponent_message = {
+                "command":"RESET_BOARD",
+                "data": {
+                    "pict_word": reset_pict_word
+                }
+            }
+            await opponent_websocket.send(json.dumps(opponent_message))
             
 
 
@@ -81,3 +102,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+
+

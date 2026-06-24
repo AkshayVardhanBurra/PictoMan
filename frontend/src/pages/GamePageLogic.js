@@ -1,14 +1,15 @@
 import { redirectToLogin } from "../Home";
+import { currentGuesses, resetGuesses } from "./GamePage";
 
-
+export let opponent_id = "";
+export let pictWord = "";
+export let room_id = "";
 
 export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord){
     //Successfully logged in or redirected out. Set up connection to server.
     const socket = new WebSocket("ws://localhost:8080/"); //get port number from .env later.
     
-    let opponent_id = "";
-    let pictWord = "";
-    let room_id = "";
+
 
     socket.onopen = (event) => {
         
@@ -36,6 +37,22 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
         }
         if(parsed.command.includes("ROOM_ID")){
             room_id = parsed.data.room_id;
+        }
+        if(parsed.command.includes("RESET_PICTWORD")){
+            pictWord = parsed.data.pict_word;
+            setWord(pictWord);
+            setColorMap(colorifyPictWord(pictWord));
+            
+         
+            console.log("RECIEVED RESET COMMAND: " + pictWord);
+        }
+        if(parsed.command.includes("RESET_BOARD")){
+            pictWord = parsed.data.pict_word;
+            setWord(pictWord);
+            setColorMap(colorifyPictWord(pictWord));
+            //resetBoard();
+            console.log("RESET_BOARD: " + pictWord)
+          
         }
 
     }
