@@ -156,7 +156,7 @@ function GamePage(){
     useEffect(() => {
 
         if(userAuth._id != ""){
-            setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord);
+            setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt);
         }else{
 
             redirectToLogin(userAuth, navigate);
@@ -172,6 +172,7 @@ function GamePage(){
         
         return <>
             <NavigationBar />
+            <h2> Prompt: {prompt} </h2>
             <CountdownTimer initialMinutes={1} onTimerEnd={() => {
                 if(judge){
                     console.log("I am the judge!")
@@ -185,7 +186,7 @@ function GamePage(){
                 setPictWordInput(e.target.value);
             }} value={pictWordInput}/>
             <button onClick={() => {
-                guessWord(socket,  pictWordInput.toLowerCase(), opponentGuesses, setOpponentGuesses, opponentWord.toLowerCase(), setOpponentWord)
+                guessWord(socket,  pictWordInput.toLowerCase(), opponentGuesses, setOpponentGuesses, opponentWord.toLowerCase(), setOpponentWord )
             }}> Enter </button>
         </>
     }

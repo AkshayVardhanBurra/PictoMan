@@ -103,6 +103,8 @@ async def handler(websocket):
                 }
             }
 
+            await opponent_websocket.send(json.dumps(opponent_message))
+
             
 
 

@@ -1,11 +1,14 @@
+import { LLMKEY } from "../../../secrets";
 import { redirectToLogin } from "../Home";
 import { currentGuesses, resetGuesses } from "./GamePage";
+
 
 export let opponent_id = "";
 export let pictWord = "";
 export let room_id = "";
 export let judge = false;
 export let promptLogicLayerCopy = "";
+
 
 export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt){
     //Successfully logged in or redirected out. Set up connection to server.
@@ -22,7 +25,7 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
 
 
     //Recieving messages from central server.
-    socket.onmessage = (msg) => {
+    socket.onmessage = async (msg) => {
         console.log("entered the onmessage")
         console.log(msg.data)
         let parsed = JSON.parse(msg.data)
@@ -44,7 +47,19 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
 
             if(judge){
                 //call api and get prompt
+                let aiResponse = await getPromptFromLLM();
+                
                 //send prompt using sendMessage
+                sendMessage(socket, JSON.stringify({
+                    command:"SEND_PROMPT",
+                    data:{
+                        "opponent_id": opponent_id,
+                        "room_id": room_id,
+                        "prompt": aiResponse
+                    }
+                }))
+                promptLogicLayerCopy = aiResponse
+                setPrompt(aiResponse)
             }
         }
 
@@ -76,6 +91,31 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
     setSocket(socket);
 }
 
+
+async function getPromptFromLLM(){
+    let response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                    method:"POST",
+                    headers: {
+                        "Authorization": `Bearer ${LLMKEY}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "model": "google/gemma-4-31b-it:free",
+                        "messages": [
+                            {
+                                "role": "user",
+                                "content": "I need a random sentence to describe something interesting to draw. Preferably, combine two unrelated objects into a sentence that artists have to draw. Give me only one sentence. Do not use any introductory or conlusion text. Your output is only one sentence."
+
+                            }
+                        ],
+                        "reasoning": {"enabled": false}
+                    })
+    })
+
+    const result = await response.json()
+    console.log(result)
+    return result.choices[0].message.content;
+}
 
 //Returns a string of w's that are the same length as pict_word
 function colorifyPictWord(pict_word){
