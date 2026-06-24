@@ -4,8 +4,10 @@ import { currentGuesses, resetGuesses } from "./GamePage";
 export let opponent_id = "";
 export let pictWord = "";
 export let room_id = "";
+export let judge = false;
+export let promptLogicLayerCopy = "";
 
-export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord){
+export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt){
     //Successfully logged in or redirected out. Set up connection to server.
     const socket = new WebSocket("ws://localhost:8080/"); //get port number from .env later.
     
@@ -35,9 +37,17 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
             setColorMap(colorifyPictWord(pictWord));
             setGameStarted(true);
         }
+
         if(parsed.command.includes("ROOM_ID")){
             room_id = parsed.data.room_id;
+            judge = parsed.data.judge
+
+            if(judge){
+                //call api and get prompt
+                //send prompt using sendMessage
+            }
         }
+
         if(parsed.command.includes("RESET_PICTWORD")){
             pictWord = parsed.data.pict_word;
             setWord(pictWord);
@@ -53,6 +63,11 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
             //resetBoard();
             console.log("RESET_BOARD: " + pictWord)
           
+        }
+
+        if(parsed.command.includes("SEND_PROMPT")){
+            promptLogicLayerCopy = parsed.data.prompt
+            setPrompt(promptLogicLayerCopy)
         }
 
     }

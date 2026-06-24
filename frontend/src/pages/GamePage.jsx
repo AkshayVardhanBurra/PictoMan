@@ -3,8 +3,9 @@ import { UserAuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import NavigationBar from "../components/NavigationBar";
 import { redirectToLogin } from "../Home";
-import { opponent_id, room_id, sendMessage, setUpMultiplayer } from './GamePageLogic';
+import { judge, opponent_id, room_id, sendMessage, setUpMultiplayer } from './GamePageLogic';
 import {generate} from 'random-words'
+import CountdownTimer from '../components/Timer';
 
 const MAX_QUEUE_MESSAGES = 4;
 
@@ -145,6 +146,7 @@ function GamePage(){
     const [opponentGuesses, setOpponentGuesses] = useState([]);
     const [gameStarted, setGameStarted] = useState(false);
     const [pictWordInput, setPictWordInput] = useState("");
+    const [prompt, setPrompt] = useState("");
 
 
 
@@ -161,15 +163,22 @@ function GamePage(){
         }
     }, [userAuth._id])
 
-    if(socket == null || !gameStarted || word == ""){ // || word == null
+    if(socket == null || !gameStarted || word == "" || prompt == ""){ // || word == null
         
         return <>
-        Web socket is missing!
+        Loading game.....
         </>
     }else{
-        console.log(word);
+        
         return <>
             <NavigationBar />
+            <CountdownTimer initialMinutes={1} onTimerEnd={() => {
+                if(judge){
+                    console.log("I am the judge!")
+                }else{
+                    console.log("I am not the judge")
+                }
+            }}/>
             <PictWordDisplay pict_word={word} colorMap={colorMap} />
             <OpponentPictWord opponentWord={opponentWord} opponentGuesses={opponentGuesses} />
             <input type="text" onChange={(e) => {

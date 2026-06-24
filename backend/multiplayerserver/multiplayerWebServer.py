@@ -37,7 +37,8 @@ async def matchmaker():
                 "other_id": player2,
                 "pict_word": player1Word,#goes with permission PICT_WORD
                 "opponent_word":player2Word,#goes with permission PICT_WORD
-                "room_id":room_id
+                "room_id":room_id,
+                "judge" : False
                 }
         }))
 
@@ -47,7 +48,8 @@ async def matchmaker():
                 "other_id": player1,
                 "pict_word": player2Word,#goes with permission PICT_WORD
                 "opponent_word": player1Word,#goes with permission PICT_WORD
-                "room_id":room_id
+                "room_id":room_id,
+                "judge": True
                 }
         }))
 
@@ -89,6 +91,18 @@ async def handler(websocket):
                 }
             }
             await opponent_websocket.send(json.dumps(opponent_message))
+
+        if message["command"] == "SEND_PROMPT":
+            opponent_websocket = clients[message["data"]["opponent_id"]]
+            prompt = message["data"]["prompt"]
+
+            opponent_message = {
+                "command": "SEND_PROMPT",
+                "data": {
+                    "prompt": prompt
+                }
+            }
+
             
 
 
