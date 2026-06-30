@@ -6,6 +6,7 @@ import { redirectToLogin } from "../Home";
 import { judge, opponent_id, room_id, sendMessage, setUpMultiplayer } from './GamePageLogic';
 import {generate} from 'random-words'
 import CountdownTimer from '../components/Timer';
+import { DrawingBoard } from '../components/DrawingBoard';
 
 const MAX_QUEUE_MESSAGES = 4;
 
@@ -134,6 +135,13 @@ function guessWord(socket, phrase, guessQueue, setGuessQueue, opponentWord, setO
     }
 }
 
+function exportImg(dataURL){
+    if(judge){
+        //store our current data url
+    }
+}
+
+
 function GamePage(){
 
     
@@ -188,6 +196,8 @@ function GamePage(){
             <button onClick={() => {
                 guessWord(socket,  pictWordInput.toLowerCase(), opponentGuesses, setOpponentGuesses, opponentWord.toLowerCase(), setOpponentWord )
             }}> Enter </button>
+
+            <DrawingBoard shouldExport = {false} onExport={exportImg}/>
         </>
     }
 }

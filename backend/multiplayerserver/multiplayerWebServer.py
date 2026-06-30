@@ -28,12 +28,13 @@ async def matchmaker():
             player2: None
         }
 
-        player1Word = "example1"
-        player2Word = "example2"
+        player1Word = "example1" #TODO replace with random word
+        player2Word = "example2" #TODO replace with random word
 
         await clients[player1].send(json.dumps({
             "command": "OTHER_PLAYER PICT_WORD ROOM_ID",
             "data": {
+                "my_id": player1,
                 "other_id": player2,
                 "pict_word": player1Word,#goes with permission PICT_WORD
                 "opponent_word":player2Word,#goes with permission PICT_WORD
@@ -45,6 +46,7 @@ async def matchmaker():
         await clients[player2].send(json.dumps({
             "command": "OTHER_PLAYER PICT_WORD ROOM_ID",
             "data": {
+                "my_id": player2
                 "other_id": player1,
                 "pict_word": player2Word,#goes with permission PICT_WORD
                 "opponent_word": player1Word,#goes with permission PICT_WORD
@@ -104,6 +106,18 @@ async def handler(websocket):
             }
 
             await opponent_websocket.send(json.dumps(opponent_message))
+        
+        if message["command"] == "UPLOAD_IMAGE":
+            opponent_id = message["data"]["opponent_id"]
+            current_id = message["data"]["my_id"]
+            base64ImgUrl = message["data"]["img_url_64"]
+
+            matchMadeData[current_id] = base64ImgUrl
+
+            if matchMadeData[opponent_id] != None:
+                #send a message to both clients, marking one of them as llm judgment to start llm judgement on client side
+                #actually, just do the judgement here
+                pass
 
             
 

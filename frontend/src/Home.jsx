@@ -5,6 +5,7 @@ import viteLogo from '/vite.svg'
 import { UserAuthContext } from './contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import styles from "./Home.module.css"
+import { DrawingBoard } from './components/DrawingBoard'
 
 //returns the user
 export async function validateUser(){
@@ -83,6 +84,8 @@ export function Home() {
         console.log("Navigating to the leaderboard!")
         navigate("/leaderboard")
       }} className={styles.buttons}> View Leaderboard </button>
+
+       
     
     </>
   )
