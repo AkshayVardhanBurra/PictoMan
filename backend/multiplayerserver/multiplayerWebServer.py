@@ -2,6 +2,13 @@ import asyncio
 from websockets.asyncio.server import serve
 import json
 import uuid
+import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+LLM_KEY = os.getenv("llmkey")
 
 MATCH_DELIMETER = ":"
 
@@ -112,7 +119,7 @@ async def handler(websocket):
             current_id = message["data"]["my_id"]
             base64ImgUrl = message["data"]["img_url_64"]
             room_id = message["data"]["room_id"]
-
+            prompt = message["data"]["prompt"]
             matchMadeData[room_id][current_id] = base64ImgUrl
             print("Image recieved by: " + current_id)
             
@@ -120,9 +127,20 @@ async def handler(websocket):
             if matchMadeData[room_id][opponent_id] != None:
                 #send a message to both clients, marking one of them as llm judgment to start llm judgement on client side
                 #actually, just do the judgement here
-                await asyncio.sleep(20)
-                print("CALLING API")
-                pass
+                scores = await callJudgementLLM(current_id, opponent_id, room_id, prompt)
+                print(scores)
+                for playerId in scores.keys():
+                    socket = clients[playerId]
+                    payload = {
+                        "command":"RECIEVE_SCORES",
+                        "data":{
+                            "scores":scores
+                        }
+                    }
+
+                    await socket.send(json.dumps(payload))
+                    print("sent!!!")
+                
 
             
 
@@ -137,8 +155,58 @@ async def main():
 
 
 # Returns a dictionary in format of player_key:score. there will be two dictionary entries since there are two players
-async def callJudgementLLM(player1Key, player2Key):
-    pass
+async def callJudgementLLM(player1Key, player2Key, room_id, prompt):
+    prompts = [
+                    {
+                        'role':'user',
+                        'content': [
+                            {
+                                "type":"text",
+                                "text": f"Here is player1's id({player1Key})'s image"
+                            },
+                            {
+                                "type":"image_url",
+                                "image_url":matchMadeData[room_id][player1Key]
+                            },
+                            {
+                                "type":"text",
+                                "text": f"Here is player2's id({player2Key})'s image"
+                            },
+                            {
+                                "type":"image_url",
+                                "image_url":matchMadeData[room_id][player2Key]
+                            },
+                            {
+                                "type":"text",
+                                "text": f"Return a number out of 10 for both outputs. Judge both players against this prompt: {prompt}. Whoever has a better, more artistic drawing that matches the prompt accurately should get the higher score. Avoid draws. Just return an output that look like this: 5 7. First number is player 1's score and second number is player 2's score. Do not say 5/10 or 7/10. I just need the two numbers with a space between them."
+                            }
+                        ]
+                     }
+                ]
+    
+
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {LLM_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+        "messages":prompts,
+        "reasoning":{
+            "enabled":True
+        }
+    }
+
+    response = requests.post(url, headers=headers, json=payload)
+    print(response.json())
+    scores = response.json()["choices"][0]["message"]["content"].split(" ")
+    return {
+        player1Key:scores[0],
+        player2Key:scores[1]
+    }
+    
 
 if __name__ == "__main__":
     asyncio.run(main())

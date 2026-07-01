@@ -11,7 +11,7 @@ export let promptLogicLayerCopy = "";
 export let my_id = ""
 
 
-export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt){
+export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt, setScores){
     //Successfully logged in or redirected out. Set up connection to server.
     const socket = new WebSocket("ws://localhost:8080/"); //get port number from .env later.
     
@@ -85,6 +85,11 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
         if(parsed.command.includes("SEND_PROMPT")){
             promptLogicLayerCopy = parsed.data.prompt
             setPrompt(promptLogicLayerCopy)
+        }
+
+        if(parsed.command.includes("RECIEVE_SCORES")){
+            console.log("RECEIVED SCORES!!!!")
+            setScores(parsed.data.scores);
         }
 
     }

@@ -151,6 +151,8 @@ function GamePage(){
     const [pictWordInput, setPictWordInput] = useState("");
     const [prompt, setPrompt] = useState("");
     const [shouldExport, setShouldExport] = useState(false);
+    const [scores, setScores] = useState(null);
+    const [gameEnded, setGameEnded] = useState(false);
 
     const exportImg = (dataUrl) => {
         sendMessage(socket, JSON.stringify({
@@ -159,9 +161,12 @@ function GamePage(){
                 "opponent_id":opponent_id,
                 "my_id": my_id,
                 "room_id": room_id,
-                "img_url_64": dataUrl
+                "img_url_64": dataUrl,
+                "prompt": prompt
             }
         }))
+
+        setGameEnded(true)
     }
 
     useEffect(() => {
@@ -170,12 +175,16 @@ function GamePage(){
     useEffect(() => {
 
         if(userAuth._id != ""){
-            setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt);
+            setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt, setScores);
         }else{
 
             redirectToLogin(userAuth, navigate);
         }
     }, [userAuth._id])
+
+    if(gameEnded){
+        return <EndGameScreen scores={scores} />
+    }
 
     if(socket == null || !gameStarted || word == "" || prompt == ""){ // || word == null
         console.log("Loading game!")
@@ -211,6 +220,26 @@ function GamePage(){
     }
 }
 
+
+function EndGameScreen({scores}){
+    
+
+    useEffect(() => {
+        if(scores != null){
+            console.log("Sending API request to add game to players' records")
+        }
+    }, [scores])
+
+
+    if(scores == null){
+        return <h2> Retrieving scores....</h2>
+    }else if(scores[my_id] > scores[opponent_id]){
+        return <h2> You won! Your score was {scores[my_id]} out of 10</h2>
+    }else{
+        return <h2> You lost! Your score was {scores[my_id]} out of 10</h2>
+    }
+
+}
 
 
 
