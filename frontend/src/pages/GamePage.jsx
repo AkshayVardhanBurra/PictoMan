@@ -3,7 +3,7 @@ import { UserAuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import NavigationBar from "../components/NavigationBar";
 import { redirectToLogin } from "../Home";
-import { judge, opponent_id, room_id, sendMessage, setUpMultiplayer } from './GamePageLogic';
+import { judge, my_id, opponent_id, room_id, sendMessage, setUpMultiplayer } from './GamePageLogic';
 import {generate} from 'random-words'
 import CountdownTimer from '../components/Timer';
 import { DrawingBoard } from '../components/DrawingBoard';
@@ -135,11 +135,6 @@ function guessWord(socket, phrase, guessQueue, setGuessQueue, opponentWord, setO
     }
 }
 
-function exportImg(dataURL){
-    if(judge){
-        //store our current data url
-    }
-}
 
 
 function GamePage(){
@@ -155,8 +150,19 @@ function GamePage(){
     const [gameStarted, setGameStarted] = useState(false);
     const [pictWordInput, setPictWordInput] = useState("");
     const [prompt, setPrompt] = useState("");
+    const [shouldExport, setShouldExport] = useState(false);
 
-
+    const exportImg = (dataUrl) => {
+        sendMessage(socket, JSON.stringify({
+            command: "UPLOAD_IMAGE",
+            data: {
+                "opponent_id":opponent_id,
+                "my_id": my_id,
+                "room_id": room_id,
+                "img_url_64": dataUrl
+            }
+        }))
+    }
 
     useEffect(() => {
         redirectToLogin(userAuth, navigate);
@@ -172,7 +178,7 @@ function GamePage(){
     }, [userAuth._id])
 
     if(socket == null || !gameStarted || word == "" || prompt == ""){ // || word == null
-        
+        console.log("Loading game!")
         return <>
         Loading game.....
         </>
@@ -187,6 +193,9 @@ function GamePage(){
                 }else{
                     console.log("I am not the judge")
                 }
+
+                setShouldExport(true);
+                
             }}/>
             <PictWordDisplay pict_word={word} colorMap={colorMap} />
             <OpponentPictWord opponentWord={opponentWord} opponentGuesses={opponentGuesses} />
@@ -197,7 +206,7 @@ function GamePage(){
                 guessWord(socket,  pictWordInput.toLowerCase(), opponentGuesses, setOpponentGuesses, opponentWord.toLowerCase(), setOpponentWord )
             }}> Enter </button>
 
-            <DrawingBoard shouldExport = {false} onExport={exportImg}/>
+            <DrawingBoard shouldExport = {shouldExport} onExport={exportImg}/>
         </>
     }
 }

@@ -8,6 +8,7 @@ export let pictWord = "";
 export let room_id = "";
 export let judge = false;
 export let promptLogicLayerCopy = "";
+export let my_id = ""
 
 
 export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt){
@@ -31,6 +32,7 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
         let parsed = JSON.parse(msg.data)
         if(parsed.command.includes("OTHER_PLAYER")){
             opponent_id = parsed.data.other_id;
+            my_id = parsed.data.my_id
         }
         if(parsed.command.includes("PICT_WORD")){
             pictWord = parsed.data.pict_word;
@@ -100,7 +102,7 @@ async function getPromptFromLLM(){
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        "model": "google/gemma-4-31b-it:free",
+                        "model": "cohere/north-mini-code:free",
                         "messages": [
                             {
                                 "role": "user",

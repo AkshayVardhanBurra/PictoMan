@@ -46,7 +46,7 @@ async def matchmaker():
         await clients[player2].send(json.dumps({
             "command": "OTHER_PLAYER PICT_WORD ROOM_ID",
             "data": {
-                "my_id": player2
+                "my_id": player2,
                 "other_id": player1,
                 "pict_word": player2Word,#goes with permission PICT_WORD
                 "opponent_word": player1Word,#goes with permission PICT_WORD
@@ -60,7 +60,7 @@ async def matchmaker():
 async def handler(websocket):
     async for message in websocket:
         message = json.loads(message)
-        print(message)
+        
         if message["command"] == "REGISTER":
             player_id = message["data"]["_id"]
 
@@ -111,15 +111,21 @@ async def handler(websocket):
             opponent_id = message["data"]["opponent_id"]
             current_id = message["data"]["my_id"]
             base64ImgUrl = message["data"]["img_url_64"]
+            room_id = message["data"]["room_id"]
 
-            matchMadeData[current_id] = base64ImgUrl
+            matchMadeData[room_id][current_id] = base64ImgUrl
+            print("Image recieved by: " + current_id)
+            
 
-            if matchMadeData[opponent_id] != None:
+            if matchMadeData[room_id][opponent_id] != None:
                 #send a message to both clients, marking one of them as llm judgment to start llm judgement on client side
                 #actually, just do the judgement here
+                await asyncio.sleep(20)
+                print("CALLING API")
                 pass
 
             
+
 
 
 async def main():
@@ -129,6 +135,10 @@ async def main():
         print("Server running on ws://localhost:8080")
         await asyncio.Future()  # run forever
 
+
+# Returns a dictionary in format of player_key:score. there will be two dictionary entries since there are two players
+async def callJudgementLLM(player1Key, player2Key):
+    pass
 
 if __name__ == "__main__":
     asyncio.run(main())
