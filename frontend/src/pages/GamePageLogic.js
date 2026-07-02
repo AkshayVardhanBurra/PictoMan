@@ -11,7 +11,9 @@ export let promptLogicLayerCopy = "";
 export let my_id = ""
 
 
-export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt, setScores){
+let internalBoardState = false;
+
+export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt, setScores, boardState, setBoardState){
     //Successfully logged in or redirected out. Set up connection to server.
     const socket = new WebSocket("ws://localhost:8080/"); //get port number from .env later.
     
@@ -77,6 +79,8 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
             pictWord = parsed.data.pict_word;
             setWord(pictWord);
             setColorMap(colorifyPictWord(pictWord));
+            setBoardState(!internalBoardState)
+            internalBoardState = !internalBoardState
             //resetBoard();
             console.log("RESET_BOARD: " + pictWord)
           

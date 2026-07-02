@@ -1,5 +1,6 @@
 import express from "express";
 import User from "../models/User.model.js";
+import Game from "../models/Game.model.js";
 
 export const router = express.Router();
 
@@ -31,6 +32,16 @@ router.get("/users", async (req, res) => {
         return res.status(400).json({success:false, message:"Something is wrong with the query or URL idk bro."})
     }
 });
+
+router.post("/recordgame", async(req, res) => {
+    try{
+        const gameRecord = new Game(req.body)
+        await gameRecord.save();
+        return res.status(200).json({success:true, message:"Successfully saved game record"})
+    }catch(error){
+        return res.status(400).json({success:false, message:"Failed to save game record!"})
+    }
+})
 
 //This will be continuously called by the SearchBar component.
 router.get("/searchUsers", async (req, res) => {

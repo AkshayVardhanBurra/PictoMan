@@ -7,6 +7,7 @@ import { judge, my_id, opponent_id, room_id, sendMessage, setUpMultiplayer } fro
 import {generate} from 'random-words'
 import CountdownTimer from '../components/Timer';
 import { DrawingBoard } from '../components/DrawingBoard';
+import API_URL from '../api_url';
 
 const MAX_QUEUE_MESSAGES = 4;
 
@@ -153,6 +154,7 @@ function GamePage(){
     const [shouldExport, setShouldExport] = useState(false);
     const [scores, setScores] = useState(null);
     const [gameEnded, setGameEnded] = useState(false);
+    const [boardState, setBoardState] = useState(false);
 
     const exportImg = (dataUrl) => {
         sendMessage(socket, JSON.stringify({
@@ -175,7 +177,7 @@ function GamePage(){
     useEffect(() => {
 
         if(userAuth._id != ""){
-            setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt, setScores);
+            setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt, setScores, boardState, setBoardState);
         }else{
 
             redirectToLogin(userAuth, navigate);
@@ -196,7 +198,7 @@ function GamePage(){
         return <>
             <NavigationBar />
             <h2> Prompt: {prompt} </h2>
-            <CountdownTimer initialMinutes={1} onTimerEnd={() => {
+            <CountdownTimer onTimerEnd={() => {
                 if(judge){
                     console.log("I am the judge!")
                 }else{
@@ -215,7 +217,8 @@ function GamePage(){
                 guessWord(socket,  pictWordInput.toLowerCase(), opponentGuesses, setOpponentGuesses, opponentWord.toLowerCase(), setOpponentWord )
             }}> Enter </button>
 
-            <DrawingBoard shouldExport = {shouldExport} onExport={exportImg}/>
+            {!boardState && <DrawingBoard shouldExport = {shouldExport} onExport={exportImg}/>}
+            {boardState && <DrawingBoard shouldExport = {shouldExport} onExport={exportImg}/>}
         </>
     }
 }
@@ -224,9 +227,21 @@ function GamePage(){
 function EndGameScreen({scores}){
     
 
-    useEffect(() => {
+    useEffect(async () => {
         if(scores != null){
-            console.log("Sending API request to add game to players' records")
+            if(scores[my_id] > scores[opponent_id]){
+                console.log("Sending API request to add game to players' records")
+                const response = await fetch(API_URL + "api/recordgame", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    winner: my_id,
+    loser: opponent_id,
+  }),
+})
+            }
         }
     }, [scores])
 

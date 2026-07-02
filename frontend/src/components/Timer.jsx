@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 
-export default function CountdownTimer({ initialMinutes = 2, onTimerEnd }) {
+
+
+const initialMinutes = 1
+export default function CountdownTimer({ onTimerEnd }) {
   const [timeLeft, setTimeLeft] = useState(initialMinutes * 60);
   const endTimeRef = useRef(null);
 
@@ -25,7 +28,7 @@ export default function CountdownTimer({ initialMinutes = 2, onTimerEnd }) {
 
     return () => clearInterval(interval);
     // re-run when initialMinutes changes
-  }, [initialMinutes, onTimerEnd]);
+  }, [initialMinutes]);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
