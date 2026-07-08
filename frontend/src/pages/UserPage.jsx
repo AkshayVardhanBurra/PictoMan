@@ -5,6 +5,7 @@ import API_URL from "../api_url";
 import NavigationBar from "../components/NavigationBar";
 
 
+
 function UserPage(){
 
     const {username} = useParams();
@@ -16,15 +17,13 @@ function UserPage(){
 
         fetch(`${API_URL}api/getIndividualUser/${username}`).then(p => p.json())
         .then(j => {
-            if(j.length != 1){
-                setUserData(null);
-            }else{
-                setUserData(j[0]);
-                console.log("The user data: ")
-                console.log(j)
+            console.log(j)
+            
+                setUserData(j);
+                console.log("The user data is set")
                 setIsLoading(false);
             }
-        })
+        )
 
 
         
@@ -53,8 +52,38 @@ function UserPage(){
             {userData.games_won}
             </p>
         </div>
+        <GameRecords userid={userData._id}/>
       </>
     }
+}
+
+function GameRecords({userid}){
+
+    let [gameRecords, setGameRecords] = useState([])
+
+    useEffect(() => {
+        if(userid != null && userid !== ""){
+           
+            fetch(`${API_URL}api/getrecords?userid=${userid}`).then(p => p.json()).then(js => {
+                let response = js;
+                if(response.success){
+                    setGameRecords(response.records)
+                    console.log(response.records)
+                    console.log(response.records[0])
+                }
+            })
+        }
+    }, [userid])
+
+
+    return (
+        <div>
+            {gameRecords.map(record => (
+                <h3 key={record._id}>Winner: {record.winner.username} Loser: {record.loser.username}</h3>
+            ))}
+        </div>
+    )
+
 }
 
 

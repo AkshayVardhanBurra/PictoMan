@@ -227,11 +227,12 @@ function GamePage(){
 function EndGameScreen({scores}){
     
 
-    useEffect(async () => {
+    useEffect(() => {
         if(scores != null){
             if(scores[my_id] > scores[opponent_id]){
                 console.log("Sending API request to add game to players' records")
-                const response = await fetch(API_URL + "api/recordgame", {
+                let response = null;
+                fetch(API_URL + "api/recordgame", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -240,6 +241,10 @@ function EndGameScreen({scores}){
     winner: my_id,
     loser: opponent_id,
   }),
+}).then(res => res.json()).then(j => {
+    response = j
+}).catch(e => {
+    console.log("Wasn't able to send scores")
 })
             }
         }
