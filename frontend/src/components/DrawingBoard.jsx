@@ -131,9 +131,7 @@ export const DrawingBoard = ({ styles = {}, onExport, shouldExport = false }) =>
         <button type="button" onClick={() => setTool('eraser')} style={{ padding: '6px 12px' }}>
           Eraser
         </button>
-        <button type="button" onClick={exportDrawing} style={{ padding: '6px 12px' }}>
-          Export PNG
-        </button>
+
       </div>
 
       <canvas
