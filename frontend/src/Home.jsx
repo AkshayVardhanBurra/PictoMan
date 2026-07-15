@@ -6,10 +6,11 @@ import { UserAuthContext } from './contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import styles from "./Home.module.css"
 import { DrawingBoard } from './components/DrawingBoard'
+import API_URL from './api_url'
 
 //returns the user
 export async function validateUser(){
-  const userPromise = await fetch("http://localhost:5050/auth/validate", {
+  const userPromise = await fetch(API_URL + "auth/validate", {
     credentials:'include'
   });
   

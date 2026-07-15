@@ -10,8 +10,21 @@ export let judge = false;
 export let promptLogicLayerCopy = "";
 export let my_id = ""
 
+export function resetVariables(){
+    opponent_id = "";
+    pictWord = "";
+    room_id = "";
+    judge = false;
+    promptLogicLayerCopy = "";
+    my_id = ""
+}
 
 let internalBoardState = false;
+
+function sendHeartBeat(socket){
+
+    sendMessage(socket, JSON.stringify({command:"HEART_BEAT", data:{"current_id":userAuth._id}}))
+}
 
 export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt, setScores, boardState, setBoardState){
     //Successfully logged in or redirected out. Set up connection to server.
@@ -24,6 +37,8 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
         sendMessage(socket, JSON.stringify({command:"REGISTER", data: {
             _id:userAuth._id
         }}))
+
+        const heartBeatIntervalId = setInterval(() => {sendHeartBeat(socket)}, 1000)
     }
 
 
@@ -94,6 +109,14 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
         if(parsed.command.includes("RECIEVE_SCORES")){
             console.log("RECEIVED SCORES!!!!")
             setScores(parsed.data.scores);
+        }
+        if(parsed.command.includes("END_GAME")){
+            resetVariables();
+            alert("Other player left the game!")
+            navigate("/");
+            if(socket.OPEN){
+                socket.close();
+            }
         }
 
     }

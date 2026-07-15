@@ -3,7 +3,7 @@ import { UserAuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import NavigationBar from "../components/NavigationBar";
 import { redirectToLogin } from "../Home";
-import { judge, my_id, opponent_id, room_id, sendMessage, setUpMultiplayer } from './GamePageLogic';
+import { judge, my_id, opponent_id, resetVariables, room_id, sendMessage, setUpMultiplayer } from './GamePageLogic';
 import {generate} from 'random-words'
 import CountdownTimer from '../components/Timer';
 import { DrawingBoard } from '../components/DrawingBoard';
@@ -184,8 +184,10 @@ function GamePage(){
         }
     }, [userAuth._id])
 
+
+
     if(gameEnded){
-        return <EndGameScreen scores={scores} />
+        return <EndGameScreen scores={scores} socket={socket} />
     }
 
     if(socket == null || !gameStarted || word == "" || prompt == ""){ // || word == null
@@ -224,7 +226,7 @@ function GamePage(){
 }
 
 
-function EndGameScreen({scores}){
+function EndGameScreen({scores, socket}){
     
 
     useEffect(() => {
@@ -246,8 +248,28 @@ function EndGameScreen({scores}){
 }).catch(e => {
     console.log("Wasn't able to send scores")
 })
+            //Send message to server to remove players using reason_id = 1
+          
+            sendMessage(socket, JSON.stringify({
+                command:"END_GAME",
+                data: {
+                    "opponent_id":opponent_id,
+                    "current_id": my_id,
+                    "room_id": room_id,
+                    reason_id:1
+                }
+            }))
+
+            
             }
+
+            socket.close(1000, "Closing normally"); 
+            resetVariables();
         }
+
+
+
+
     }, [scores])
 
 
