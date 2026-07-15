@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import styles from "./UserPage.module.css";
 import API_URL from "../api_url";
 import NavigationBar from "../components/NavigationBar";
+import { clearHeartBeat } from "./GamePageLogic";
 
 
 
@@ -11,6 +12,10 @@ function UserPage(){
     const {username} = useParams();
     const [userData, setUserData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        clearHeartBeat();
+    }, [])
     useEffect(() => {
 
         setIsLoading(true);

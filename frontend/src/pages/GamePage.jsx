@@ -248,6 +248,19 @@ function EndGameScreen({scores, socket}){
 }).catch(e => {
     console.log("Wasn't able to send scores")
 })
+
+fetch(API_URL + "api/addWin", {
+            method:'PUT',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            credentials: "include",
+            body:JSON.stringify({})
+        }).then(res => res.json()).catch(e => {
+            console.log("AN ERROR HAPPPEND WHILE TRYING TO UPDATE WINS")
+        })
+
+
             //Send message to server to remove players using reason_id = 1
           
             sendMessage(socket, JSON.stringify({

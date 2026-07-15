@@ -4,6 +4,7 @@ import styles from "../pages/login.module.css";
 import { useContext, useState } from "react";
 import { useEffect } from "react";
 import { UserAuthContext } from "../contexts/AuthContext.jsx";
+import API_URL from "../api_url.js";
 
 //returns true -> strong password or false -> weak password
 function checkPasswordStrength(password){
@@ -39,7 +40,7 @@ function checkPasswordStrength(password){
 
 async function checkUserExists(username){
     try{
-        const userPromise = await fetch(`http://localhost:5050/auth/checkusername?username=${username}`)
+        const userPromise = await fetch(`${API_URL}auth/checkusername?username=${username}`)
         if(userPromise.ok){
             const userData = await userPromise.json()
             return userData.exists
@@ -56,7 +57,7 @@ async function checkUserExists(username){
 async function signUpUser(username, password){
     
     try{
-        let p = await fetch("http://localhost:5050/auth/createaccount", {
+        let p = await fetch(`${API_URL}auth/createaccount`, {
             method:'POST',
             headers: {
                 'Content-Type':'application/json'

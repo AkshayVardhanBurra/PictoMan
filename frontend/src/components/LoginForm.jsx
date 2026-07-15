@@ -3,6 +3,7 @@ import { useLocation, Link} from "react-router-dom";
 import { UserAuthContext } from "../contexts/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 import styles from "../pages/login.module.css";
+import API_URL from "../api_url.js";
 
 export function LoginForm() {
     
@@ -24,7 +25,7 @@ export function LoginForm() {
         
         if(username != "" && password.trim() != ""){
             //call login post request api 
-            fetch("http://localhost:5050/auth/login", {
+            fetch(API_URL + "auth/login", {
             method:'POST',
             headers: {
                 'Content-Type':'application/json'

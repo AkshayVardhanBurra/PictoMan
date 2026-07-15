@@ -20,10 +20,19 @@ export function resetVariables(){
 }
 
 let internalBoardState = false;
+let intervalID = ""
+
+export function clearHeartBeat(){
+    if(intervalID != ""){
+        clearInterval(intervalID)
+    }
+}
 
 function sendHeartBeat(socket){
-
-    sendMessage(socket, JSON.stringify({command:"HEART_BEAT", data:{"current_id":userAuth._id}}))
+    if(my_id != ""){
+        sendMessage(socket, JSON.stringify({command:"HEART_BEAT", data:{"current_id":my_id}}))
+        console.log("SENT HEART BEAT!")
+    }
 }
 
 export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt, setScores, boardState, setBoardState){
@@ -39,6 +48,7 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
         }}))
 
         const heartBeatIntervalId = setInterval(() => {sendHeartBeat(socket)}, 1000)
+        intervalID = heartBeatIntervalId
     }
 
 
@@ -117,6 +127,8 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
             if(socket.OPEN){
                 socket.close();
             }
+            setSocket(null)
+            clearHeartBeat()
         }
 
     }

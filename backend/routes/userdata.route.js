@@ -2,6 +2,7 @@ import express from "express";
 import User from "../models/User.model.js";
 import Game from "../models/Game.model.js";
 import mongoose from "mongoose";
+import { verifyToken } from "./middleware.js";
 
 export const router = express.Router();
 
@@ -92,6 +93,22 @@ router.get("/getIndividualUser/:username", async (req, res)=>{
         return res.status(200).json(user);
     }catch(error){
         return res.status(400).json({success:false, message:"Something went wrong in the server!"});
+    }
+})
+
+router.put("/addWin", verifyToken, async (req, res)=>{
+    try{
+        const user = await User.findById(req.user.id)
+        user.games_won += 1
+        const updatedUser = await user.save()
+        console.log(updatedUser)
+        res.status(200).json(updatedUser)
+    }catch(error){
+        console.log(
+            "BIG BOI ERROR HAPPEND HERE"
+        )
+        console.log(error)
+        res.status(400).json(JSON.stringify({success:false, message:"Error happend"}))
     }
 })
 

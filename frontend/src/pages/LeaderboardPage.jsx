@@ -4,6 +4,7 @@ import NavigationBar from "../components/NavigationBar";
 import API_URL from "../api_url";
 import styles from "./LeaderboardPage.module.css";
 import UserSearchBar from "../components/UserSearchBar";
+import { clearHeartBeat } from "./GamePageLogic";
 
 const MAX_LEADERBOARD_USERS = 200;
 const MAX_RECORDS_PER_PAGE = 2;
@@ -37,6 +38,9 @@ export function LeaderboardPage() {
     const [currWindow, setCurrWindow] = useState(0);
     const [direction, setDirection] = useState(true) // true -> forward. false -> backward
 
+    useEffect(() => {
+        clearHeartBeat();
+    }, [])
     useEffect(() => {
         setLoading(true)
         if(currWindow == 0){

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import styles from "./Home.module.css"
 import { DrawingBoard } from './components/DrawingBoard'
 import API_URL from './api_url'
+import { clearHeartBeat } from './pages/GamePageLogic'
 
 //returns the user
 export async function validateUser(){
@@ -56,6 +57,10 @@ export function Home() {
   const [count, setCount] = useState(0)
   const userAuth = useContext(UserAuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+        clearHeartBeat();
+    }, [])
 
   useEffect(() => {
     
