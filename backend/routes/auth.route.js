@@ -50,7 +50,7 @@ router.post("/login", async (req, res) => {
         })
         res.cookie("token", generateToken(userFound), {
             maxAge: 3600000 * 24,
-           sameSite:'false',
+           sameSite:'none',
            httpOnly:true,
            secure:true, // change to true later
 
