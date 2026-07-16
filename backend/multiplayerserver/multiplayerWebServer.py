@@ -24,11 +24,14 @@ match_queue = asyncio.Queue()
 
 
 async def health_check(connection, request):
-    # Intercepts Render's health check path (usually '/' or '/health')
-    if request.path in ["/", "/health"]:
-        # Returns a standard HTTP 200 OK response to Render
-        return connection.respond(http.HTTPStatus.OK, b"OK\n")
-    return None  # Let actual WebSocket requests pass through normally
+    if request.path in ("/", "/health"):
+        if request.method == "HEAD":
+            return connection.respond(http.HTTPStatus.OK, b"")
+
+        if request.method == "GET":
+            return connection.respond(http.HTTPStatus.OK, b"OK")
+
+    return None
 
 async def matchmaker():
     while True:
