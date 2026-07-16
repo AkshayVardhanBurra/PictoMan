@@ -5,7 +5,6 @@ import router from "./routes/auth.route.js";
 import {router as userDataRouter} from "./routes/userdata.route.js";
 import jwt from "jsonwebtoken"
 import cookieParser from "cookie-parser";
-const PORT = process.env.PORT || 5050;
 const app = express();
 
 
@@ -15,7 +14,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-    origin:'http://localhost:5173',
+    origin:'https://pictoman.netlify.app',
     credentials:true
 }));
 app.use(cookieParser());
@@ -23,8 +22,12 @@ app.use(cookieParser());
 app.use("/auth", router);
 app.use("/api", userDataRouter);
 
-app.listen(PORT, () => {
+
+
+const PORT = process.env.PORT || 10000; // Render uses 10000 by default
+
+app.listen(PORT, '0.0.0.0', () => {
     connectDB();
-    console.log(`Server listening on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 })
 
