@@ -3,7 +3,7 @@ import { UserAuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import NavigationBar from "../components/NavigationBar";
 import { redirectToLogin } from "../Home";
-import { judge, my_id, opponent_id, resetVariables, room_id, sendMessage, setUpMultiplayer } from './GamePageLogic';
+import { clearHeartBeat, judge, my_id, opponent_id, resetVariables, room_id, sendMessage, setUpMultiplayer } from './GamePageLogic';
 import {generate} from 'random-words'
 import CountdownTimer from '../components/Timer';
 import { DrawingBoard } from '../components/DrawingBoard';
@@ -234,6 +234,7 @@ function EndGameScreen({scores, socket}){
             if(scores[my_id] > scores[opponent_id]){
                 console.log("Sending API request to add game to players' records")
                 let response = null;
+                
                 fetch(API_URL + "api/recordgame", {
   method: "POST",
   headers: {
@@ -276,7 +277,7 @@ fetch(API_URL + "api/addWin", {
             
             }
 
-            socket.close(1000, "Closing normally"); 
+            
             resetVariables();
         }
 
