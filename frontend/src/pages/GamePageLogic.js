@@ -142,7 +142,7 @@ async function getPromptFromLLM(){
     let response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                     method:"POST",
                     headers: {
-                        "Authorization": `Bearer ${LLMKEY}`,
+                        "Authorization": `Bearer ${import.meta.env.VITE_LLMKEY}`,
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
