@@ -278,8 +278,8 @@ async def heart_beat():
 async def main():
     asyncio.create_task(matchmaker())
     asyncio.create_task(heart_beat())
-
-    async with serve(handler, "localhost", 8080):
+    port = int(os.environ.get("PORT", 8080))
+    async with serve(handler, "localhost", port):
         print("Server running on ws://localhost:8080")
         await asyncio.Future()  # run forever
 
