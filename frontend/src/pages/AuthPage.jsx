@@ -10,7 +10,7 @@ export default function AuthPage(){
         }, [])
     return  <>
     <NavigationBar />
-    <CountdownTimer />
+    
     <Outlet />
     </>
 }

@@ -78,8 +78,8 @@ function NavigationBar(){
         <div className = {styles.mover}>
             <ul className = {styles.navList}>
                 
-                <li className = {styles.navItem}> Home</li>
-                <li className = {styles.navItem}> How To Play</li>
+                <li className = {styles.navItem}> <Link to="/"> Home </Link></li>
+                {/* <li className = {styles.navItem}> How To Play</li> */}
                 {!isLogged ? <li className = {styles.navItem}> <Link to="/auth/login"> Login/Sign Up </Link>  </li> :
                 <li className = {styles.navItem}> <p onClick={() => {setStatus(logStatusChange + 1)}}> Log Out</p></li>}
             </ul>
