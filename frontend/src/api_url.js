@@ -1,5 +1,5 @@
 
 
-const API_URL = "https://pictomanbackend.onrender.com";
+const API_URL = "https://pictomanbackend.onrender.com/";
 
 export default API_URL;
