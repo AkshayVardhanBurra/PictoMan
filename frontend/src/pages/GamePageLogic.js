@@ -37,7 +37,7 @@ function sendHeartBeat(socket){
 
 export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, setGameStarted, setColorMap, setOpponentWord, prompt, setPrompt, setScores, boardState, setBoardState){
     //Successfully logged in or redirected out. Set up connection to server.
-    const socket = new WebSocket("wss://pictoman-ei8a.onrender.com/"); //get port number from .env later.
+    const socket = new WebSocket("wss://pictoman-ei8a.onrender.com/ws"); //get port number from .env later.
     
 
 
