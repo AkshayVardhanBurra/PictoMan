@@ -23,19 +23,12 @@ matchMadeData = {}
 match_queue = asyncio.Queue()
 
 
-from http import HTTPStatus
+import http
 
-async def health_check(connection, request):
-    try:
-        print(request)
-        if request.path.startswith("/ws"):
-            print("GOT IN HERE BOI")
-            return None
-        print(request.path)
-        return connection.respond(HTTPStatus.NOT_FOUND, "NOT FOUND!\n")
-    except:
-        print("an error occurred boi")
-        return connection.respond(HTTPStatus.NOT_FOUND, "NOT FOUND!\n")
+
+def health_check(connection, request):
+    if request.path == "/health":
+        return connection.respond(http.HTTPStatus.OK, "OK\n")
 
 async def matchmaker():
     while True:
@@ -220,7 +213,7 @@ async def handler(websocket):
                     }
                 }
 
-                clients[opponent_id].send(json.dumps(opponent_payload))
+            await clients[opponent_id].send(json.dumps(opponent_payload))
         
 
             
