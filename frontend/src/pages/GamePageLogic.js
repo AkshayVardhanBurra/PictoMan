@@ -1,4 +1,4 @@
-import { LLMKEY } from "../../../secrets";
+import { LLMKEY } from "../../secrets";
 import { redirectToLogin } from "../Home";
 import { currentGuesses, resetGuesses } from "./GamePage";
 
