@@ -279,8 +279,8 @@ async def main():
     asyncio.create_task(matchmaker())
     asyncio.create_task(heart_beat())
     port = int(os.environ.get("PORT", 8080))
-    async with serve(handler, "localhost", port):
-        print("Server running on ws://localhost:8080")
+    async with serve(handler, "0.0.0.0", port):
+        print("Server running on port " + str(port))
         await asyncio.Future()  # run forever
 
 
