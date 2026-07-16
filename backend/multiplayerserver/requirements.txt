@@ -1,0 +1,8 @@
+asyncio
+websockets
+json
+uuid
+requests
+dotenv
+os
+time
