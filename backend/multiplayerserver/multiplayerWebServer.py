@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import os
 import time
 from websockets.protocol import State
+import http
 
 load_dotenv()
 
@@ -21,6 +22,13 @@ matchMadeData = {}
 # Async queue for matchmaking
 match_queue = asyncio.Queue()
 
+
+async def health_check(connection, request):
+    # Intercepts Render's health check path (usually '/' or '/health')
+    if request.path in ["/", "/health"]:
+        # Returns a standard HTTP 200 OK response to Render
+        return connection.respond(http.HTTPStatus.OK, b"OK\n")
+    return None  # Let actual WebSocket requests pass through normally
 
 async def matchmaker():
     while True:
@@ -279,7 +287,7 @@ async def main():
     asyncio.create_task(matchmaker())
     asyncio.create_task(heart_beat())
     port = int(os.environ.get("PORT", 8080))
-    async with serve(handler, "0.0.0.0", port):
+    async with serve(handler, "0.0.0.0", port,  process_request=health_check):
         print("Server running on port " + str(port))
         await asyncio.Future()  # run forever
 
