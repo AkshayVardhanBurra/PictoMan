@@ -29,7 +29,7 @@ export function clearHeartBeat(){
 }
 
 function sendHeartBeat(socket){
-    if(my_id != "" && socket.OPEN){
+    if(my_id != "" && socket.readyState == WebSocket.OPEN){
         sendMessage(socket, JSON.stringify({command:"HEART_BEAT", data:{"current_id":my_id}}))
         console.log("SENT HEART BEAT!")
     }
@@ -127,7 +127,7 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
                 alert("Other player left the game!")
                 navigate("/");
             }
-            if(socket.OPEN){
+            if(socket.readyState == WebSocket.OPEN){
                 socket.close();
             }
             clearHeartBeat()
