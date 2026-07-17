@@ -29,7 +29,7 @@ export function clearHeartBeat(){
 }
 
 function sendHeartBeat(socket){
-    if(my_id != ""){
+    if(my_id != "" && socket.OPEN){
         sendMessage(socket, JSON.stringify({command:"HEART_BEAT", data:{"current_id":my_id}}))
         console.log("SENT HEART BEAT!")
     }

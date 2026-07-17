@@ -235,7 +235,8 @@ async def handler(websocket):
         
         if message["command"] == "HEART_BEAT":
             current_id = message["data"]["current_id"]
-            client_heartbeat[current_id] = time.time()
+            if current_id in client_heartbeat.keys():
+                client_heartbeat[current_id] = time.time()
 
     
                 
