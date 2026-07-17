@@ -330,13 +330,14 @@ async def callJudgementLLM(player1Key, player2Key, room_id, prompt):
         "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
         "messages":prompts,
         "reasoning":{
-            "enabled":True
+            "enabled":False
         }
     }
 
     response = requests.post(url, headers=headers, json=payload)
     print(response.json())
     scores = response.json()["choices"][0]["message"]["content"].split(" ")
+    raise ValueError("Just a value error boi")
     return {
         player1Key:scores[0],
         player2Key:scores[1]
