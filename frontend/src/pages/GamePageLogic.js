@@ -16,6 +16,7 @@ export function resetVariables(){
     judge = false;
     promptLogicLayerCopy = "";
     my_id = ""
+    intervalID = ""
 }
 
 let internalBoardState = false;
@@ -120,7 +121,7 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
             setScores(parsed.data.scores);
         }
         if(parsed.command.includes("END_GAME")){
-            resetVariables();
+           
 
             if(Number(parsed.data.reason_id) == 2){
                 alert("Other player left the game!")
@@ -130,6 +131,7 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
                 socket.close();
             }
             clearHeartBeat()
+            resetVariables();
             setSocket(null)
             
         }
