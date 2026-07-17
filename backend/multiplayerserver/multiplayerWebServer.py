@@ -336,6 +336,7 @@ async def callJudgementLLM(player1Key, player2Key, room_id, prompt):
 
     try:
         response = requests.post(url, headers=headers, json=payload)
+        print("THE JSON BIENG PRINTED!!")
         print(response.json())
         scores = response.json()["choices"][0]["message"]["content"].split(" ")
         raise ValueError("Just a value error boi")
