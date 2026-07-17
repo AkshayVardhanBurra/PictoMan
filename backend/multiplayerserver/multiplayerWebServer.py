@@ -334,14 +334,20 @@ async def callJudgementLLM(player1Key, player2Key, room_id, prompt):
         }
     }
 
-    response = requests.post(url, headers=headers, json=payload)
-    print(response.json())
-    scores = response.json()["choices"][0]["message"]["content"].split(" ")
-    raise ValueError("Just a value error boi")
-    return {
-        player1Key:scores[0],
-        player2Key:scores[1]
-    }
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        print(response.json())
+        scores = response.json()["choices"][0]["message"]["content"].split(" ")
+        raise ValueError("Just a value error boi")
+        return {
+            player1Key:scores[0],
+            player2Key:scores[1]
+        }
+    except Exception as e:
+        return {
+            player1Key:6,
+            player2Key:7
+        }
     
 
 if __name__ == "__main__":
