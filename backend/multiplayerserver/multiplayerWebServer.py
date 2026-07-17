@@ -350,8 +350,8 @@ async def callJudgementLLM(player1Key, player2Key, room_id, prompt):
         response = requests.post(url, headers=headers, json=payload)
         scores = response.json()["choices"][0]["message"]["content"].split(" ")
         return {
-            player1Key:scores[0],
-            player2Key:scores[1],
+            player1Key:int(scores[0]),
+            player2Key:int(scores[1]),
             "message":"Successfully retreived scores"
 
         }
