@@ -252,7 +252,8 @@ async def end_match(room_id, faulty_player):
     opponent_payload = {
         "command":"END_GAME",
         "data": {
-            "reason_id":2
+            "reason_id":2,
+            "reason": "heartbeat"
         }
     }
 
