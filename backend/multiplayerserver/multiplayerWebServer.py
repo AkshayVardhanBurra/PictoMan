@@ -202,15 +202,26 @@ async def handler(websocket):
             # reason id = 2 means a user left the game in the middle of the game
             reason_id = int(message["data"]["reason_id"])
 
-            if reason_id == 2:
-                opponent_payload = {
-                    "command":"END_GAME",
-                    "data": {
-                        "reason_id":reason_id
-                    }
+            
+            opponent_payload = {
+                "command":"END_GAME",
+                "data": {
+                    "reason_id":reason_id
                 }
+            }
 
-            await clients[opponent_id].send(json.dumps(opponent_payload))
+            try:
+
+                await clients[opponent_id].send(json.dumps(opponent_payload))
+            except Exception as e:
+                print("something happend")
+
+
+            try:
+
+                await clients[current_id].send(json.dumps(opponent_payload))
+            except Exception as e:
+                print("something happend")
         
 
             

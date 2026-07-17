@@ -277,8 +277,8 @@ fetch(API_URL + "api/addWin", {
             
             }
 
-            socket.close(1000, "Closing normally"); 
-            resetVariables();
+            
+            
         }
 
 

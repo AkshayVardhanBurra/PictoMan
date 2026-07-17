@@ -121,13 +121,17 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
         }
         if(parsed.command.includes("END_GAME")){
             resetVariables();
-            alert("Other player left the game!")
-            navigate("/");
+
+            if(Number(parsed.data.reason_id) == 2){
+                alert("Other player left the game!")
+                navigate("/");
+            }
             if(socket.OPEN){
                 socket.close();
             }
-            setSocket(null)
             clearHeartBeat()
+            setSocket(null)
+            
         }
 
     }
