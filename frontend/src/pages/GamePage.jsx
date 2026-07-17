@@ -229,10 +229,14 @@ function GamePage(){
 
 function EndGameScreen({scores, socket}){
     
+    let [myscore, setmyscore] = useState(null)
+    let [oppscore, setopscore] = useState(null)
 
     useEffect(() => {
         if(scores != null){
             console.log(scores[my_id] + " " + typeof(scores[my_id]))
+            setmyscore(score[my_id])
+            setopscore(score[opponent_id])
             if(scores[my_id] > scores[opponent_id]){
                 console.log("Sending API request to add game to players' records")
                 let response = null;
@@ -288,12 +292,12 @@ fetch(API_URL + "api/addWin", {
     }, [scores])
 
 
-    if(scores == null){
+    if(myscore == null || oppscore == null){
         return <h2> Retrieving scores....</h2>
-    }else if(scores[my_id] > scores[opponent_id]){
-        return <h2> You won! Your score was {scores[my_id]} out of 10</h2>
+    }else if(myscore > oppscore){
+        return <h2> You won! Your score was {myscore} out of 10</h2>
     }else{
-        return <h2> You lost! Your score was {scores[my_id]} out of 10</h2>
+        return <h2> You lost! Your score was {myscore} out of 10</h2>
     }
 
 }
