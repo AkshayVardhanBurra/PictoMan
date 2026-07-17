@@ -338,7 +338,7 @@ async def callJudgementLLM(player1Key, player2Key, room_id, prompt):
     }
     
     payload = {
-        "model": "google/gemma-4-31b-it:free",
+        "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
         "messages":prompts,
         "reasoning":{
             "enabled":True
