@@ -232,6 +232,7 @@ function EndGameScreen({scores, socket}){
 
     useEffect(() => {
         if(scores != null){
+            console.log(scores[my_id] + " " + typeof(scores[my_id]))
             if(scores[my_id] > scores[opponent_id]){
                 console.log("Sending API request to add game to players' records")
                 let response = null;
