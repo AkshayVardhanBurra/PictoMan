@@ -26,9 +26,6 @@ match_queue = asyncio.Queue()
 import http
 
 
-def health_check(connection, request):
-    if request.path == "/health":
-        return connection.respond(http.HTTPStatus.OK, "OK\n")
 
 async def matchmaker():
     while True:
@@ -287,7 +284,7 @@ async def main():
     asyncio.create_task(matchmaker())
     asyncio.create_task(heart_beat())
     port = int(os.environ.get("PORT", 8080))
-    async with serve(handler, "0.0.0.0", port, process_request=health_check):
+    async with serve(handler, "0.0.0.0", port):
         print("Server running on port " + str(port))
         await asyncio.Future()  # run forever
 
