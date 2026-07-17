@@ -122,7 +122,7 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
         }
         if(parsed.command.includes("END_GAME")){
            
-
+            console.log(parsed)
             if(Number(parsed.data.reason_id) == 2){
                 alert("Other player left the game!")
                 navigate("/");
