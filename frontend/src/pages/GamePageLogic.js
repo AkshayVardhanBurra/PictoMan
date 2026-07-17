@@ -8,6 +8,7 @@ export let room_id = "";
 export let judge = false;
 export let promptLogicLayerCopy = "";
 export let my_id = ""
+let inScores = false
 
 export function resetVariables(){
     opponent_id = "";
@@ -17,6 +18,7 @@ export function resetVariables(){
     promptLogicLayerCopy = "";
     my_id = ""
     intervalID = ""
+    inScores = false
 }
 
 let internalBoardState = false;
@@ -118,12 +120,13 @@ export async function setUpMultiplayer(setSocket, setWord, userAuth, navigate, s
 
         if(parsed.command.includes("RECIEVE_SCORES")){
             console.log("RECEIVED SCORES!!!!")
+            inScores = true
             setScores(parsed.data.scores);
         }
         if(parsed.command.includes("END_GAME")){
            
             console.log(parsed)
-            if(Number(parsed.data.reason_id) == 2){
+            if(Number(parsed.data.reason_id) == 2 && !inScores){
                 alert("Other player left the game!")
                 navigate("/");
             }
