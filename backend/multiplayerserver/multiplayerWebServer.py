@@ -345,20 +345,21 @@ async def callJudgementLLM(player1Key, player2Key, room_id, prompt):
         }
     }
 
+    response = None
     try:
         response = requests.post(url, headers=headers, json=payload)
-        print("THE JSON BIENG PRINTED!!")
-        print(response.json())
         scores = response.json()["choices"][0]["message"]["content"].split(" ")
-        raise ValueError("Just a value error boi")
         return {
             player1Key:scores[0],
-            player2Key:scores[1]
+            player2Key:scores[1],
+            "message":"Successfully retreived scores"
+
         }
     except Exception as e:
         return {
             player1Key:6,
-            player2Key:7
+            player2Key:7,
+            "message":"Not able to retrieve scores" + json.dumps(response)
         }
     
 
