@@ -8,6 +8,7 @@ import {generate} from 'random-words'
 import CountdownTimer from '../components/Timer';
 import { DrawingBoard } from '../components/DrawingBoard';
 import API_URL from '../api_url';
+import { Link } from 'react-router-dom';
 
 
 const MAX_QUEUE_MESSAGES = 4;
@@ -296,9 +297,11 @@ fetch(API_URL + "api/addWin", {
     if(myscore == null || oppscore == null){
         return <h2> Retrieving scores....</h2>
     }else if(myscore > oppscore){
-        return <h2> You won! Your score was {myscore} out of 10</h2>
+        return <> <h2> You won! Your score was {myscore} out of 10</h2>
+        <button> <Link to="/"> Home </Link></button> </>
     }else{
-        return <h2> You lost! Your score was {myscore} out of 10</h2>
+        return <> <h2> You lost! Your score was {myscore} out of 10</h2>
+        <button> <Link to="/"> Home </Link></button> </>
     }
 
 }
