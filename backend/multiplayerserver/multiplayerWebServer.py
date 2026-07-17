@@ -210,6 +210,10 @@ async def handler(websocket):
                 }
             }
 
+            del client_heartbeat[current_id]
+            del client_heartbeat[opponent_id]
+            del matchMadeData[room_id]
+
             try:
 
                 await clients[opponent_id].send(json.dumps(opponent_payload))
@@ -225,11 +229,10 @@ async def handler(websocket):
         
 
             
-            del matchMadeData[room_id]
+            
             del clients[current_id]
             del clients[opponent_id]
-            del client_heartbeat[current_id]
-            del client_heartbeat[opponent_id]
+
             print(len(matchMadeData))
             print(len(clients))
         
