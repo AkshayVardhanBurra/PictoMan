@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 
 
 
-const initialMinutes = 1
+const initialMinutes = 5
 export default function CountdownTimer({ onTimerEnd }) {
   const [timeLeft, setTimeLeft] = useState(initialMinutes * 60);
   const endTimeRef = useRef(null);
