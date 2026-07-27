@@ -7,12 +7,12 @@ At the start of each round, an AI generates a drawing prompt that both players m
 To add an extra layer of strategy, each player secretly receives a random word. Opponents may attempt to guess this word in a hangman-style fashion during the round. If a player successfully guesses their opponent’s secret word, the opponent’s canvas is immediately wiped clean, forcing them to start over before time runs out.
 
 **Features**
-User registration and authentication
-Random matchmaking for multiplayer games
-AI-generated drawing prompts
-Five-minute timed drawing rounds
-AI-powered judging and winner selection
-Secret-word mechanic with hangman-style guessing
-Dynamic whiteboard reset penalty for successful guesses
+- User registration and authentication
+- Random matchmaking for multiplayer games
+- AI-generated drawing prompts
+- Five-minute timed drawing rounds
+- AI-powered judging and winner selection
+- Secret-word mechanic with hangman-style guessing
+- Dynamic whiteboard reset penalty for successful guesses
 
 PictoMan blends artistic skill with deduction and quick thinking, creating a unique competitive experience where every round is unpredictable.
